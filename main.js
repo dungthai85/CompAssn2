@@ -100,7 +100,7 @@ Circle.prototype.update = function () {
                     this.color = 2;    
                     var number = Math.floor(Math.random() * 10 + 1);
                     //dconsole.log(number);
-                    if (number % 6 === 0){
+                    if (number % 4 === 0){
                         this.speed = 2;
                         if (this.game.entities.length < 35){
                             const emerge = new Circle(this.current);
@@ -110,6 +110,11 @@ Circle.prototype.update = function () {
                     }
                 }
             }
+            // if(this.tag === "red"){
+            //     if(ent.tag === "white"){
+            //         ent.removeFromWorld = true;
+            //     }
+            // }
             //If the Still circles have been touched a certain number it will remove and add a new entity
             if (ent.count === 0 && this.game.entities.length < 45){
                 circle = new StillCircle(this.current);
