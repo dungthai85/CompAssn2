@@ -9,7 +9,7 @@ function distance(a, b) {
 
 function Circle(game) {
     this.player = 1;
-    this.radius = 20;
+    this.radius = 10;
     this.current = game;
     this.colors = ["cyan", "Red", "violet", "Blue", "White", "Pink", "Orange"];
     this.color = Math.floor(Math.random() *10 + 1);
@@ -98,11 +98,11 @@ Circle.prototype.update = function () {
                 //Sometimes this collision will cause a new circle to emerge.
                 else if (ent.tag === "none" && ent.color == 2) {
                     this.color = 2;    
-                    var number = Math.floor(Math.random() * 10 + 1);
+                    var number = Math.floor(Math.random() * 40 + 1);
                     //dconsole.log(number);
-                    if (number % 4 === 0){
+                    if (number % 30 === 0){
                         this.speed = 2;
-                        if (this.game.entities.length < 35){
+                        if (this.game.entities.length < 120){
                             const emerge = new Circle(this.current);
                             emerge.color = 4;
                             this.current.addEntity(emerge);
@@ -116,10 +116,10 @@ Circle.prototype.update = function () {
             //     }
             // }
             //If the Still circles have been touched a certain number it will remove and add a new entity
-            if (ent.count === 0 && this.game.entities.length < 45){
+            if (ent.count === 0 && this.game.entities.length < 140){
                 circle = new StillCircle(this.current);
                 circle.speed = 0;
-                circle.radius = Math.floor(Math.random() * 10 + 10);
+                // circle.radius = Math.floor(Math.random() * 10 + 10);
                 // circle.color = Math.floor(Math.random() *4 + 1);
                 circle.color = 0;
                 this.game.addEntity(circle);
@@ -162,7 +162,7 @@ Circle.prototype.draw = function (ctx) {
 
 function StillCircle(game) {
     this.player = 1;
-    this.radius = 20;
+    this.radius = 10;
     this.colors = ["cyan", "Red", "violet", "Blue", "White", "Pink", "Orange"];
     this.color = Math.floor(Math.random() *10 + 1);
     this.tag = "white";
@@ -208,7 +208,7 @@ StillCircle.prototype.draw = function (ctx) {
 
 var friction = 1;
 var acceleration = 5000;
-var maxSpeed = 700;
+var maxSpeed = 500;
 
 // the "main" code begins here
 
@@ -229,15 +229,15 @@ ASSET_MANAGER.downloadAll(function () {
     circle.tag = "red";
     gameEngine.addEntity(circle);
 
-    for (var i = 0; i < 10; i++) {
+    for (var i = 0; i < 20; i++) {
         circle = new Circle(gameEngine);
         circle.color = 4;
         gameEngine.addEntity(circle);
     };
-    for (var i = 0; i < 5; i++) {
+    for (var i = 0; i < 10; i++) {
         circle = new StillCircle(gameEngine);
         circle.speed = 0;
-        circle.radius = Math.floor(Math.random() * 10 + 10);
+        // circle.radius = Math.floor(Math.random() * 10 + 10);
         // circle.color = Math.floor(Math.random() *4 + 1);
         circle.color = 0;
         gameEngine.addEntity(circle);
