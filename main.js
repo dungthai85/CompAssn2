@@ -232,6 +232,11 @@ window.onload = function () {
     circle.radius = 10;
     circle.tag = "red";
     gameEngine.addEntity(circle);
+    circle = new Circle(gameEngine);
+    circle.color = 1;
+    circle.radius = 10;
+    circle.tag = "red";
+    gameEngine.addEntity(circle);
 
     for (var i = 0; i < 20; i++) {
         circle = new Circle(gameEngine);
