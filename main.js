@@ -238,7 +238,7 @@ window.onload = function () {
     circle.tag = "red";
     gameEngine.addEntity(circle);
 
-    for (var i = 0; i < 20; i++) {
+    for (var i = 0; i < 15; i++) {
         circle = new Circle(gameEngine);
         circle.color = 4;
         gameEngine.addEntity(circle);
