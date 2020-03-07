@@ -120,7 +120,7 @@ Circle.prototype.update = function () {
                 }
             }
             //If the Still circles have been touched a certain number it will remove and add a new entity
-            if (ent.count === 0 && this.game.entities.length < 140){
+            if (ent.count === 0 && this.game.entities.length < 150){
                 circle = new StillCircle(this.current);
                 circle.speed = 0;
                 // circle.radius = Math.floor(Math.random() * 10 + 10);
