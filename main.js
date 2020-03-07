@@ -103,18 +103,22 @@ Circle.prototype.update = function () {
                     if (number % 30 === 0){
                         this.speed = 2;
                         if (this.game.entities.length < 120){
-                            const emerge = new Circle(this.current);
+                            const emerge = new Circle(this.game);
                             emerge.color = 4;
-                            this.current.addEntity(emerge);
+                            this.game.addEntity(emerge);
                         }
                     }
                 }
+            } else if (this.tag === "red"){   
+                var number = Math.floor(Math.random() * 10 + 1);
+                if (ent.tag === "red" && this.game.entities.length < 140 && number % 2 === 0 ){
+                    var circle = new Circle(this.game);
+                    circle.color = 1;
+                    circle.radius = 10;
+                    circle.tag = "red";
+                    this.game.addEntity(circle);
+                }
             }
-            // if(this.tag === "red"){
-            //     if(ent.tag === "white"){
-            //         ent.removeFromWorld = true;
-            //     }
-            // }
             //If the Still circles have been touched a certain number it will remove and add a new entity
             if (ent.count === 0 && this.game.entities.length < 140){
                 circle = new StillCircle(this.current);
@@ -208,17 +212,11 @@ StillCircle.prototype.draw = function (ctx) {
 
 var friction = 1;
 var acceleration = 5000;
-var maxSpeed = 500;
+var maxSpeed = 700;
 
 // the "main" code begins here
 
-var ASSET_MANAGER = new AssetManager();
-
-ASSET_MANAGER.queueDownload("./img/960px-Blank_Go_board.png");
-ASSET_MANAGER.queueDownload("./img/black.png");
-ASSET_MANAGER.queueDownload("./img/white.png");
-
-ASSET_MANAGER.downloadAll(function () {
+window.onload = function () {
     console.log("starting up da sheild");
     var canvas = document.getElementById('gameWorld');
     var ctx = canvas.getContext('2d');
@@ -226,6 +224,12 @@ ASSET_MANAGER.downloadAll(function () {
     var gameEngine = new GameEngine();
     var circle = new Circle(gameEngine);
     circle.color = 1;
+    circle.radius = 10;
+    circle.tag = "red";
+    gameEngine.addEntity(circle);
+    circle = new Circle(gameEngine);
+    circle.color = 1;
+    circle.radius = 10;
     circle.tag = "red";
     gameEngine.addEntity(circle);
 
@@ -237,12 +241,61 @@ ASSET_MANAGER.downloadAll(function () {
     for (var i = 0; i < 10; i++) {
         circle = new StillCircle(gameEngine);
         circle.speed = 0;
-        // circle.radius = Math.floor(Math.random() * 10 + 10);
-        // circle.color = Math.floor(Math.random() *4 + 1);
         circle.color = 0;
         gameEngine.addEntity(circle);
     };
 
     gameEngine.init(ctx);
     gameEngine.start();
-});
+  
+    var socket = io.connect("http://24.16.255.56:8888");
+
+    socket.on("load", function (data) {
+        console.log(data);
+                gameEngine.entities = [];
+        for (var i = 0; i < data.data.length; i++){
+            var ent = data.data[i];
+            if(ent.Color === 0){
+                circle = new StillCircle(gameEngine);
+                circle.speed = 0;
+                circle.color = 0;
+                circle.x = ent.X;
+                circle.y = ent.Y;
+                circle.velocity = ent.Vel;
+                gameEngine.addEntity(circle);
+            } else {
+                circle = new Circle(gameEngine);
+                circle.color = ent.Color;
+                circle.x = ent.X;
+                circle.y = ent.Y;
+                circle.velocity = ent.Vel;
+                circle.tag = ent.Tag;
+                gameEngine.addEntity(circle);
+            }
+        }
+    });
+  
+    var text = document.getElementById("text");
+    var saveButton = document.getElementById("save");
+    var loadButton = document.getElementById("load");
+  
+    saveButton.onclick = function () {
+      console.log("save");
+      text.innerHTML = "Saved."
+      var entity = [];
+      for (var i = 0; i < gameEngine.entities.length; i++){
+          var ent = gameEngine.entities[i];
+        entity.push({X: ent.x, Y: ent.y, Vel: ent.velocity, Color: ent.color, Tag: ent.tag})
+      }
+      console.log(entity);
+      socket.emit("save", { studentname: "Dung Thai", statename: "assn3", data: entity });
+    };
+  
+    loadButton.onclick = function () {
+      console.log("load");
+      text.innerHTML = "Loaded."
+      socket.emit("load", { studentname: "Dung Thai", statename: "assn3" });
+    };
+  
+  };
+  
